@@ -213,3 +213,12 @@ body {
 .legal h2 { font-size: 1.15rem; margin: 28px 0 8px; }
 .legal ul { padding-left: 20px; }
 .legal li { margin: 4px 0; }
+
+/* ---------- Антиспам: поле-ловушка, уведённое за пределы экрана ---------- */
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

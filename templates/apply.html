@@ -13,9 +13,20 @@
     {# novalidate отключает проверки браузера, чтобы было видно проверку на сервере.
        В реальном проекте нужны обе: браузерная — для удобства, серверная — для надёжности #}
     <form class="card form" method="post" novalidate>
-      {% if errors %}
+      {% if expired %}
+        <p class="form-alert">Страница была открыта слишком долго. Проверьте данные и отправьте форму ещё раз.</p>
+      {% elif errors %}
         <p class="form-alert">Проверьте поля, отмеченные красным.</p>
       {% endif %}
+
+      {# Антиспам. Токен — подписанное время открытия формы #}
+      <input type="hidden" name="form_token" value="{{ form_token }}">
+      {# Ловушка для ботов: поле спрятано от людей (и от экранных дикторов —
+         aria-hidden), а боты заполняют всё подряд. Не display:none —
+         такие поля некоторые боты научились пропускать #}
+      <div class="hp" aria-hidden="true">
+        <label>Ваш сайт <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
 
       {# Макрос — это функция в Jinja: одно поле формы с подписью и ошибкой #}
       {% macro field(name, label, type="text", placeholder="") %}
