@@ -75,6 +75,13 @@ def init_db():
             )
             """
         )
+        # Миграция: колонка появилась позже, чем таблица. CREATE TABLE IF NOT EXISTS
+        # её не добавит в уже созданную таблицу — добавляем сами, если её нет.
+        # consent_at — когда кандидат дал согласие (доказательство для 152-ФЗ)
+        columns = [row["name"] for row in conn.execute("PRAGMA table_info(applications)")]
+        if "consent_at" not in columns:
+            conn.execute("ALTER TABLE applications ADD COLUMN consent_at TEXT")
+
         count = conn.execute("SELECT COUNT(*) FROM vacancies").fetchone()[0]
         if count == 0:
             # Знаки ? — параметры запроса. Значения подставляет sqlite3,
@@ -112,8 +119,8 @@ def add_application(vacancy_id, data):
     with get_connection() as conn:
         conn.execute(
             "INSERT INTO applications "
-            "(vacancy_id, full_name, phone, specialty, experience, age, has_license) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "(vacancy_id, full_name, phone, specialty, experience, age, has_license, consent_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
             (
                 vacancy_id,
                 data["full_name"],

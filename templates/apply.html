@@ -44,6 +44,20 @@
         <span>Есть водительские права</span>
       </label>
 
+      {# 152-ФЗ: галочка НЕ стоит заранее — человек ставит её сам.
+         Документы открываются в новой вкладке, чтобы не потерять заполненную форму #}
+      <div class="consent {% if errors.consent %}has-error{% endif %}">
+        <label class="checkbox">
+          <input type="checkbox" name="consent" {% if values.get("consent") %}checked{% endif %}>
+          <span>
+            Даю <a href="/consent" target="_blank">согласие на обработку персональных данных</a>
+            и подтверждаю, что ознакомлен(а) с
+            <a href="/privacy" target="_blank">политикой конфиденциальности</a>
+          </span>
+        </label>
+        {% if errors.consent %}<small>{{ errors.consent }}</small>{% endif %}
+      </div>
+
       <button class="button" type="submit">Отправить заявку</button>
     </form>
   </main>

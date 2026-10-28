@@ -184,3 +184,32 @@ body {
 .table th { background: #faf9f6; font-weight: 600; }
 .table tr:last-child td { border-bottom: 0; }
 .nowrap { white-space: nowrap; }
+
+/* ---------- Согласие на обработку ПДн ---------- */
+.consent { display: grid; gap: 4px; }
+.consent .checkbox { align-items: flex-start; }
+.consent .checkbox input { flex-shrink: 0; margin-top: 3px; }
+.consent .checkbox span { font-size: 0.92rem; color: #5f5d57; }
+.consent a { color: #1f6f4a; }
+.consent.has-error .checkbox span { color: #c0392b; }
+.consent.has-error input { outline: 2px solid #c0392b; outline-offset: 2px; }
+
+/* ---------- Подвал ---------- */
+.footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  font-size: 0.9rem;
+  color: #8a877f;
+}
+.footer a { color: #5f5d57; }
+
+/* ---------- Юридические документы ---------- */
+.legal h1 { font-size: 1.6rem; margin-top: 0; }
+.legal h2 { font-size: 1.15rem; margin: 28px 0 8px; }
+.legal ul { padding-left: 20px; }
+.legal li { margin: 4px 0; }

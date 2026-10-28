@@ -2,7 +2,7 @@ import os
 import secrets
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
@@ -10,6 +10,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 import admin
 import db
+import notifications
 from schemas import ERROR_MESSAGES, ApplicationForm
 from templating import collect_errors, templates
 
@@ -63,7 +64,7 @@ def apply_form(request: Request, vacancy_id: int):
 
 
 @app.post("/vacancy/{vacancy_id}/apply")
-async def apply_submit(request: Request, vacancy_id: int):
+async def apply_submit(request: Request, vacancy_id: int, background_tasks: BackgroundTasks):
     vacancy = get_vacancy_or_404(vacancy_id)
     values = dict(await request.form())
 
@@ -80,7 +81,11 @@ async def apply_submit(request: Request, vacancy_id: int):
             status_code=422,
         )
 
-    db.add_application(vacancy_id, application.model_dump())
+    data = application.model_dump()
+    db.add_application(vacancy_id, data)
+    # Письмо отправится уже после того, как кандидат получит ответ,
+    # — ему не придётся ждать почтовый сервер
+    background_tasks.add_task(notifications.notify_new_application, vacancy, data)
     # После успешной отправки перенаправляем на другую страницу (паттерн
     # Post/Redirect/Get), чтобы F5 не отправил заявку второй раз
     return RedirectResponse(f"/vacancy/{vacancy_id}/thanks", status_code=303)
@@ -90,3 +95,15 @@ async def apply_submit(request: Request, vacancy_id: int):
 def apply_thanks(request: Request, vacancy_id: int):
     vacancy = get_vacancy_or_404(vacancy_id)
     return templates.TemplateResponse(request, "thanks.html", {"vacancy": vacancy})
+
+
+# ---------- Юридические документы (152-ФЗ) ----------
+
+@app.get("/privacy")
+def privacy(request: Request):
+    return templates.TemplateResponse(request, "legal/privacy.html")
+
+
+@app.get("/consent")
+def consent(request: Request):
+    return templates.TemplateResponse(request, "legal/consent.html")

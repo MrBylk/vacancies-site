@@ -19,6 +19,7 @@
             <th>Возраст</th>
             <th>Права</th>
             <th>Опыт</th>
+            <th>Согласие на ПДн</th>
           </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
               <td>{{ a.age }}</td>
               <td>{{ "да" if a.has_license else "нет" }}</td>
               <td>{{ a.experience }}</td>
+              <td class="nowrap">{{ a.consent_at or "—" }}</td>
             </tr>
           {% endfor %}
         </tbody>

@@ -2,6 +2,8 @@ from pathlib import Path
 
 from fastapi.templating import Jinja2Templates
 
+import config
+
 # Общий объект шаблонов: им пользуются и main.py, и admin.py
 templates = Jinja2Templates(directory="templates")
 
@@ -15,6 +17,8 @@ def static_url(filename):
 
 # Делаем функцию доступной во всех шаблонах: {{ static_url("style.css") }}
 templates.env.globals["static_url"] = static_url
+# Данные оператора нужны в подвале и юридических документах на всех страницах
+templates.env.globals["config"] = config
 
 
 def collect_errors(validation_error, messages):

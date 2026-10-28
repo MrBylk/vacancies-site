@@ -16,6 +16,17 @@ class ApplicationForm(BaseModel):
     age: int = Field(ge=16, le=80)
     # Галочка в HTML-форме: если отмечена, браузер присылает "on", если нет — ничего
     has_license: bool = False
+    # Согласие на обработку персональных данных (152-ФЗ) — без него заявку не принимаем.
+    # validate_default=True обязателен: снятую галочку браузер не присылает вовсе,
+    # подставляется False, а без этого флага Pydantic не запускает валидатор для значения по умолчанию
+    consent: bool = Field(default=False, validate_default=True)
+
+    @field_validator("consent")
+    @classmethod
+    def check_consent(cls, value):
+        if not value:
+            raise ValueError("no consent")
+        return value
 
     @field_validator("phone")
     @classmethod
@@ -36,6 +47,7 @@ ERROR_MESSAGES = {
     "specialty": "Укажите специальность",
     "experience": "Слишком длинный текст — сократите, пожалуйста",
     "age": "Укажите возраст числом от 16 до 80",
+    "consent": "Без согласия на обработку персональных данных мы не можем принять заявку",
 }
 
 

@@ -9,5 +9,10 @@
 <body>
   {# Общий каркас для всех страниц. Каждая страница подставляет свой block content #}
   {% block content %}{% endblock %}
+
+  <footer class="footer">
+    <span>© {{ config.OPERATOR.name }}</span>
+    <a href="/privacy">Политика конфиденциальности</a>
+  </footer>
 </body>
 </html>
