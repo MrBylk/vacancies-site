@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <header class="header">
+    <h1>Открытые вакансии</h1>
+    <p>Выберите подходящую вакансию и оставьте заявку — мы перезвоним.</p>
+  </header>
+
+  <main class="list">
+    {# Цикл Jinja: для каждой вакансии из списка рисуем карточку #}
+    {% for v in vacancies %}
+      <article class="card">
+        <h2>{{ v.title }}</h2>
+        <p class="salary">{{ v.salary }}</p>
+        <p>{{ v.description }}</p>
+        <div class="card-footer">
+          {% if v.needs_license %}
+            <span class="tag">Нужны водительские права</span>
+          {% endif %}
+          <a class="button" href="/vacancy/{{ v.id }}/apply">Откликнуться</a>
+        </div>
+      </article>
+    {% else %}
+      <p>Сейчас открытых вакансий нет.</p>
+    {% endfor %}
+  </main>
+{% endblock %}

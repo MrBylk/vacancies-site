@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ "Изменить вакансию" if vacancy else "Новая вакансия" }}{% endblock %}
+
+{% block admin_content %}
+  <a class="back" href="/admin">← Все вакансии</a>
+  <form class="card form" method="post" novalidate>
+    <h1>{{ "Изменить вакансию" if vacancy else "Новая вакансия" }}</h1>
+    {% if errors %}
+      <p class="form-alert">Проверьте поля, отмеченные красным.</p>
+    {% endif %}
+
+    <label class="field {% if errors.title %}has-error{% endif %}">
+      <span>Название</span>
+      <input type="text" name="title" value="{{ values.get('title', '') }}"
+             placeholder="Например, водитель категории C">
+      {% if errors.title %}<small>{{ errors.title }}</small>{% endif %}
+    </label>
+
+    <label class="field {% if errors.salary %}has-error{% endif %}">
+      <span>Зарплата</span>
+      <input type="text" name="salary" value="{{ values.get('salary', '') }}"
+             placeholder="от 60 000 ₽">
+      {% if errors.salary %}<small>{{ errors.salary }}</small>{% endif %}
+    </label>
+
+    <label class="field {% if errors.description %}has-error{% endif %}">
+      <span>Описание</span>
+      <textarea name="description" rows="5"
+                placeholder="Обязанности, график, условия">{{ values.get('description', '') }}</textarea>
+      {% if errors.description %}<small>{{ errors.description }}</small>{% endif %}
+    </label>
+
+    <label class="checkbox">
+      <input type="checkbox" name="needs_license" {% if values.get('needs_license') %}checked{% endif %}>
+      <span>Нужны водительские права</span>
+    </label>
+
+    <button class="button" type="submit">{{ "Сохранить" if vacancy else "Добавить" }}</button>
+  </form>
+{% endblock %}

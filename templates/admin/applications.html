@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Заявки — админка{% endblock %}
+
+{% block admin_content %}
+  <h1>Заявки</h1>
+
+  {% if applications %}
+    {# Таблица шире экрана телефона — обёртка даёт ей прокручиваться вбок #}
+    <div class="table-wrap card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>Вакансия</th>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Специальность</th>
+            <th>Возраст</th>
+            <th>Права</th>
+            <th>Опыт</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in applications %}
+            <tr>
+              <td class="nowrap">{{ a.created_at }}</td>
+              <td>{{ a.vacancy_title }}</td>
+              <td>{{ a.full_name }}</td>
+              <td class="nowrap"><a href="tel:{{ a.phone }}">{{ a.phone }}</a></td>
+              <td>{{ a.specialty }}</td>
+              <td>{{ a.age }}</td>
+              <td>{{ "да" if a.has_license else "нет" }}</td>
+              <td>{{ a.experience }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>Заявок пока нет.</p>
+  {% endif %}
+{% endblock %}

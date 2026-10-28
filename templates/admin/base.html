@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <nav class="admin-nav">
+    <div class="admin-nav-inner">
+      <b>Админка</b>
+      <a href="/admin">Вакансии</a>
+      <a href="/admin/applications">Заявки</a>
+      <a href="/" target="_blank">Сайт ↗</a>
+      <form method="post" action="/admin/logout">
+        <button class="link-button" type="submit">Выйти</button>
+      </form>
+    </div>
+  </nav>
+  <main class="list wide">
+    {% block admin_content %}{% endblock %}
+  </main>
+{% endblock %}

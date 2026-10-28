@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Заявка отправлена{% endblock %}
+
+{% block content %}
+  <main class="list">
+    <div class="card thanks">
+      <h1>Спасибо, заявка отправлена!</h1>
+      <p>Вакансия: <b>{{ vacancy.title }}</b>. Мы перезвоним вам в ближайшее время.</p>
+      <a class="button" href="/">Вернуться к вакансиям</a>
+    </div>
+  </main>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Отклик: {{ vacancy.title }}{% endblock %}
+
+{% block content %}
+  <header class="header">
+    <a class="back" href="/">← Все вакансии</a>
+    <h1>{{ vacancy.title }}</h1>
+    <p class="salary">{{ vacancy.salary }}</p>
+  </header>
+
+  <main class="list">
+    {# novalidate отключает проверки браузера, чтобы было видно проверку на сервере.
+       В реальном проекте нужны обе: браузерная — для удобства, серверная — для надёжности #}
+    <form class="card form" method="post" novalidate>
+      {% if errors %}
+        <p class="form-alert">Проверьте поля, отмеченные красным.</p>
+      {% endif %}
+
+      {# Макрос — это функция в Jinja: одно поле формы с подписью и ошибкой #}
+      {% macro field(name, label, type="text", placeholder="") %}
+        <label class="field {% if errors[name] %}has-error{% endif %}">
+          <span>{{ label }}</span>
+          <input type="{{ type }}" name="{{ name }}" value="{{ values.get(name, '') }}"
+                 placeholder="{{ placeholder }}">
+          {% if errors[name] %}<small>{{ errors[name] }}</small>{% endif %}
+        </label>
+      {% endmacro %}
+
+      {{ field("full_name", "Имя и фамилия", placeholder="Иван Петров") }}
+      {{ field("phone", "Телефон", type="tel", placeholder="+7 999 123-45-67") }}
+      {{ field("specialty", "Специальность", placeholder="Например, водитель") }}
+      {{ field("age", "Возраст", type="number") }}
+
+      <label class="field {% if errors.experience %}has-error{% endif %}">
+        <span>Опыт работы</span>
+        <textarea name="experience" rows="4"
+                  placeholder="Где и сколько работали">{{ values.get("experience", "") }}</textarea>
+        {% if errors.experience %}<small>{{ errors.experience }}</small>{% endif %}
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="has_license" {% if values.get("has_license") %}checked{% endif %}>
+        <span>Есть водительские права</span>
+      </label>
+
+      <button class="button" type="submit">Отправить заявку</button>
+    </form>
+  </main>
+{% endblock %}
